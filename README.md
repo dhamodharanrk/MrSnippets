@@ -8,7 +8,7 @@ To get started install the package using below command on your machine.
 
 `pip install MrSnippets`
 
-##Helper Module
+## Helper Module
 
 Its an collection of commonly used functions to minimize the code and time.
 
@@ -22,7 +22,7 @@ Its an collection of commonly used functions to minimize the code and time.
 - get_string_from_html(soup)
 - convert_base64_Image(encoded_data,path_to_store,file_name)
 
-##Soup Module
+## Soup Module
 
 Its an simple implementation of css selector using Beautifulsoup. The selectors are stright forward and simple.
 
