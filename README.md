@@ -1,13 +1,14 @@
-# MrSelector
-Its an simple implementation of css selector using Beautifulsoup. The selectors are stright forward and simple. 
-It will defenetly reduce effortds to build effective scrapper.
+# MrSnippets
+A collection of common codes or wrapper functions to simplify the coding time
 
 
+## Soup Helpers
+
+Its an simple implementation of css selector using Beautifulsoup. The selectors are stright forward and simple.
 
 There are list of pre-defined selector functions. For example selecting a single element from chunk as follows.
 
 ##### get_element(soup='',tag='',attributeName='',attributeValue='')
-
 
 ## List of fucntions supported now,
 
