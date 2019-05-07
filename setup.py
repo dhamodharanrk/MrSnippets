@@ -10,7 +10,7 @@ URL = "https://github.com/dhamodharanrk/MrSnippets"
 EMAIL = "dhamodharanrk@gmail.com"
 AUTHOR = "Dhamodharan Karuppuswamy"
 
-REQUIRED = ["beautifulsoup4>=4.7.1"]
+REQUIRED = ["beautifulsoup4>=4.7.1","PyMySQL>=0.9.3","pymongo>=3.8.0"]
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
