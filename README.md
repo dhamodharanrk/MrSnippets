@@ -1,6 +1,10 @@
 # MrSnippets
 A collection of common codes or wrapper functions to simplify the coding time
 
+To Install 
+
+## pip install MrSnippets
+
 ## =====Helper Functions=====
 
 Its an collection of commonly used functions to minimize the code and time.
