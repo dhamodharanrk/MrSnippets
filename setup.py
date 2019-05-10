@@ -10,7 +10,7 @@ URL = "https://github.com/dhamodharanrk/MrSnippets"
 EMAIL = "dhamodharanrk@gmail.com"
 AUTHOR = "Dhamodharan Karuppuswamy"
 
-REQUIRED = ["beautifulsoup4>=4.7.1","PyMySQL>=0.9.3","pymongo>=3.8.0","user_agent>=0.1.9","ftfy>=5.5.1","tldextract>=2.2.1","bleach>=3.1.0","python-csv>=0.0.11","requests>=2.21.0","html5lib>=1.0.1","fuzzywuzzy>=0.17.0"]
+REQUIRED = ["beautifulsoup4>=4.3.3","PyMySQL>=0.9.3","pymongo>=3.8.0","user_agent>=0.1.9","ftfy>=5.5.1","tldextract>=2.2.1","bleach>=3.1.0","python-csv>=0.0.11","requests>=2.18.4","html5lib>=1.0b10","fuzzywuzzy>=0.17.0"]
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
