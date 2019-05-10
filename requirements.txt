@@ -1,3 +1,8 @@
 beautifulsoup4>=4.7.1
 PyMySQL>=0.9.3
 pymongo>=3.8.0
+user_agent>=0.1.9
+ftfy>=5.5.1
+tldextract>=2.2.1
+bleach>=3.1.0
+python-csv>=0.0.11

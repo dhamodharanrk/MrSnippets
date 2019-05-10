@@ -34,7 +34,7 @@ Its an simple implementation of css selector using Beautifulsoup. The selectors 
 
 There are list of pre-defined selector functions. For example selecting a single element from chunk as follows.
 
-    from MrSnippets.soup_wrapper import  * 
+    from MrSnippets.soup_wrapper import  *
     name = get_element(html_chunk,'div','class','people_name')
 
 #### List of fucntions supported now,
