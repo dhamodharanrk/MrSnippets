@@ -37,11 +37,15 @@ There are list of pre-defined selector functions. For example selecting a single
 
     from MrSnippets.soup_wrapper import  *
     name = get_element(html_chunk,'div','class','people_name')
+    name = get_element_by_tag(html_chunk,'<div class="people_name">')
+    
 
 #### List of fucntions supported now,
 
 - get_element(soup, tag="div", attributeName='class', attributeValue='profile')
 - get_elements(soup, tag="div", attributeName='class', attributeValue='profiles')
+- get_element_by_tag(soup,selector_string:str)
+- get_elements_by_tag(soup,selector_string:str)
 - get_sibling_text(soup, child:str, sibling:str, contains_string:str, sibling_type="prev|next")
 - extract_hyper_link(soup_chunk,patterns:list,**kwargs)
 - extract_vcard_link(soup_chunk,**kwargs)
