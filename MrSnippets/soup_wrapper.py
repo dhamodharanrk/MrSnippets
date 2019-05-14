@@ -20,6 +20,18 @@ def get_elements(soup, tag="div", attributeName='class', attributeValue='profile
         return None
     return html_tags
 
+def get_element_by_tag(soup,selector_string:str):
+    try:
+        element = BeautifulSoup(selector_string,'html5lib').body.next
+        return soup.find(element.name,element.attrs)
+    except: return None
+
+def get_elements_by_tag(soup,selector_string:str):
+    try:
+        element = BeautifulSoup(selector_string,'html5lib').body.next
+        return soup.find_all(element.name,element.attrs)
+    except: return None
+
 def get_sibling_text(soup, child: str, sibling: str, contains_string: str, sibling_type="prev|next"):
     result = soup.find(child, string=contains_string)
     if sibling_type == 'next':
