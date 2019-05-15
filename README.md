@@ -23,6 +23,7 @@ Its an collection of commonly used functions to minimize the code and time.
 - get_alpha_from_string(string:str)
 - get_string_from_html(soup)
 - join_string(source_list:list, separator:str='')
+- compare_string(string_one,string_two)
 - get_clean_list(list_x:list)
 - compare_list(first:list, second:list)
 - find_list_duplicates(list:list)
@@ -34,13 +35,17 @@ Its an simple implementation of css selector using Beautifulsoup. The selectors 
 
 There are list of pre-defined selector functions. For example selecting a single element from chunk as follows.
 
-    from MrSnippets.soup_wrapper import  * 
+    from MrSnippets.soup_wrapper import  *
     name = get_element(html_chunk,'div','class','people_name')
+    name = get_element_by_tag(html_chunk,'<div class="people_name">')
+    
 
 #### List of fucntions supported now,
 
 - get_element(soup, tag="div", attributeName='class', attributeValue='profile')
 - get_elements(soup, tag="div", attributeName='class', attributeValue='profiles')
+- get_element_by_tag(soup,selector_string:str)
+- get_elements_by_tag(soup,selector_string:str)
 - get_sibling_text(soup, child:str, sibling:str, contains_string:str, sibling_type="prev|next")
 - extract_hyper_link(soup_chunk,patterns:list,**kwargs)
 - extract_vcard_link(soup_chunk,**kwargs)
@@ -102,9 +107,10 @@ Its an collection of commonly used function for inracting on Internet
 
 - get_user_agent(**kwargs)
 - extract_domain_name(url)
+- downloader(url,dir,file_name,extension)
 - get_response(url, response_type, attempt=0, **kwargs)
 
-list of arquiments can be used for this function
+available  arguments  for this function
 
     payload = kwargs.get('payload',{})
     timeout = kwargs.get('time_out', 60)
@@ -117,7 +123,7 @@ list of arquiments can be used for this function
     stream =  kwargs.get('stream', False)
     dom_parser = kwargs.get('dom_parser','html5lib')
 
-it can used like
+Sample Usage:
 
     response = get_response(url,'json',method='post', payload = data, headers=headers, timeout=100, verify=False)
 
@@ -130,6 +136,12 @@ Collection of  functions to minimize the code and time for NLP related operation
 - clean_my_html(html_source)
 - get_top_keywords(self, html_source)
 - get_word_frequency(html_source, search_words)
+
+
+    search_words = ['programmer','dhamodharanrk']
+    frequency = get_word_frequency(html_source, search_words)
+    search_words = {'name': 'john,ram', 'brand': 'apple,nokia,samsung'}
+    frequency = get_word_frequency(html_source, search_words)
 
 ## Misc Functions
 
@@ -147,7 +159,6 @@ Collection of  functions to minimize the code and time for day to day tasks
 - get_sizeof(num, suffix='o')
 - get_current_user()
 - get_parsed_url(url_to_parse)
-
 
 ### Prerequisites
 
