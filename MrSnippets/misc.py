@@ -2,9 +2,29 @@ __author__ = 'dhamodharan.k'
 import os
 import pickle
 import csv
-
 from urllib.parse import urlparse
+
 current_path = os.getcwd()
+
+def get_filename(file_name):
+    '''Used to get file name from the path'''
+    temp = str(file_name).lower().split("\\")[-1].split('.')
+    if len(temp)>=2:
+        return "{}.{}".format(temp[0],temp[1])
+    else: return None
+
+def move_to(source,destination,filename):
+    '''Used to move the file from source to destination'''
+    shutil.move(source, destination + "\\" + filename)
+
+def copy_to(source,destination,filename):
+    '''Used to copy the file from source to destination'''
+    shutil.copy(source, destination + "\\" + filename)
+
+def list_files(diretory,ext:str=''):
+    '''List all the files in the directory'''
+    if ext: return glob.glob(diretory + "\\*." + str(ext))
+    else: return glob.glob(diretory + "\\*.*")
 
 def read_text_file(file_name):
     try:
