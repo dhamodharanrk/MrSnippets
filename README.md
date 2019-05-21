@@ -159,6 +159,11 @@ Collection of  functions to minimize the code and time for day to day tasks
 - get_sizeof(num, suffix='o')
 - get_current_user()
 - get_parsed_url(url_to_parse)
+- get_filename(file_name)
+- move_to(source,destination,filename)
+- copy_to(source,destination,filename)
+- list_files(diretory,ext:str='')
+
 
 ### Prerequisites
 
@@ -177,8 +182,7 @@ Please read [CONTRIBUTING.md](https://github.com/dhamodharanrk/MrSnippets/blob/m
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Required Libraries
-
-- beautifulsoup4>=4.7.1
+- beautifulsoup4>=4.3.3
 - PyMySQL>=0.9.3
 - pymongo>=3.8.0
 - user_agent>=0.1.9
@@ -186,6 +190,10 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - tldextract>=2.2.1
 - bleach>=3.1.0
 - python-csv>=0.0.11
+- requests>=2.18.4
+- html5lib>=1.0b10
+- fuzzywuzzy>=0.17.0
+- pytest-shutil>=1.6.0
 
 ## Acknowledgments
 
