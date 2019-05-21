@@ -136,12 +136,19 @@ Collection of  functions to minimize the code and time for NLP related operation
 - clean_my_html(html_source)
 - get_top_keywords(self, html_source)
 - get_word_frequency(html_source, search_words)
+- get_tokenized(string:str,ignore_stopwords:bool=False)
+- get_lemmatize_data(tokens:list)
+- get_standardize_words(tokens:list,lookup_dict:dict)
+- generate_ngrams(tokens:list,n)
 
-
-    search_words = ['programmer','dhamodharanrk']
-    frequency = get_word_frequency(html_source, search_words)
-    search_words = {'name': 'john,ram', 'brand': 'apple,nokia,samsung'}
-    frequency = get_word_frequency(html_source, search_words)
+```python
+search_words = ['programmer','dhamodharanrk']
+frequency = get_word_frequency(html_source, search_words)
+search_words = {'name': 'john,ram', 'brand': 'apple,nokia,samsung'}
+frequency = get_word_frequency(html_source, search_words)
+lookup_dict = {'rt':'Retweet', 'dm':'direct message', "awsm" : "awesome", "luv" :"love"}
+standardize_words = get_standardize_words(tokens,lookup_dict )
+```
 
 ## Misc Functions
 
