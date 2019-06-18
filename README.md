@@ -124,6 +124,18 @@ Example usage,
     table_meta = {'db_name':'informationSystem','table_name':'contactInfo'}
     insert_records(db_object, table_data:dict, sample_data, ["phone_no"])
 
+###### query_actions
+
+    __author__ = 'dhamodharan.k'
+    from MrSnippets.sql_wrapper import *
+    db_object = get_sql_client('xx.xx.xx.xx', 'employeeData', 'root', 'pass')
+    find_q = 'select emp_id,age from employee_info where emp_id in (4213958, 4213959)'
+    rows = query_actions(db_object, find_q, 'select')
+    for row in rows:
+        content = str(row[1] + 1)
+        update_query = "update employee_info set agePlus = '{}' where emp_id = {}".format(content,row[0])
+        query_actions(db_object,update_query,'update')
+
 ## Web Client
 
 Its an collection of commonly used function for inracting on Internet
