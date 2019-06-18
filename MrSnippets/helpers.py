@@ -2,7 +2,7 @@ __author__ = 'dhamodharan.k'
 import os
 import re
 import ftfy
-# from fuzzywuzzy import fuzz
+from fuzzywuzzy import fuzz
 import collections
 
 
@@ -34,9 +34,9 @@ def get_string_from_html(soup):
     clean_string = get_clean_text(clean_string)
     return  clean_string
 
-# def compare_string(string_one,string_two):
-#     '''compare two strings and returns a ratio of match in integer. Uses fuzz logic'''
-#     return fuzz.ratio(string_one,string_two)
+def compare_string(string_one,string_two):
+    '''compare two strings and returns a ratio of match in integer. Uses fuzz logic'''
+    return fuzz.ratio(string_one,string_two)
 
 def join_string(source_list:list, separator:str=' '):
     '''Joing list of items with given separator'''
