@@ -12,13 +12,29 @@ def get_mysql_client(host_ip, username, pwd,db_name):
     return connection
 
 
-def execute_mysql_query(connection, query):
-    with connection.cursor() as cursor:
-        cursor.execute(query)
-        result = cursor.fetchall()
-        cursor.close()
-        return result
+def _get_last_inserted(connection_obj):
+    with connection_obj.cursor() as ms_cursor:
+        ins_id_query = 'SELECT LAST_INSERT_ID();'
+        ins_id = query_actions(connection_obj, ins_id_query, 'select')
+    ms_cursor.close()
+    return ins_id
 
-conn = get_mysql_client('xx.xx.xx.xxx', 'root', 'password', 'profile')
-query = 'select * from sample'
-result_rows = execute_mysql_query(conn, query)
+def _get_affected_rows(connection_obj):
+    with connection_obj.cursor() as ms_cursor:
+        ins_id_query = 'SELECT ROW_COUNT();'
+        ins_id = query_actions(connection_obj, ins_id_query, 'select')
+    ms_cursor.close()
+    return ins_id
+
+def query_actions(connection_obj, query, query_type):
+    result = None
+    with connection_obj.cursor() as cursor:
+        cursor.execute(query)
+        if query_type == 'select':
+            result = cursor.fetchall()
+        if query_type == 'insert':
+            result = _get_last_inserted(connection_obj)[0]['LAST_INSERT_ID()']
+        if query_type == 'update':
+            result = str(_get_affected_rows(connection_obj)[0]['ROW_COUNT()']) + 'row(s) affected '
+    cursor.close()
+    return result

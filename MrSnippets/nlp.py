@@ -77,6 +77,6 @@ def get_standardize_words(tokens:list,lookup_dict:dict):
 
 def generate_ngrams(tokens:list,n):
     output = []
-    for i in range(len(PreTokenized)-n+1):
-        output.append(PreTokenized[i:i+n])
+    for i in range(len(tokens)-n+1):
+        output.append(tokens[i:i+n])
     return output

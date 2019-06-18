@@ -1,8 +1,6 @@
 from PIL import Image
 from PIL import ImageEnhance
 
-'''Need to add lib in requirement file'''
-
 def adjust_brightness(input_image, output_image, factor):
     image = Image.open(input_image)
     enhancer_object = ImageEnhance.Brightness(image)

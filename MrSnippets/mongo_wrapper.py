@@ -10,15 +10,15 @@ def get_mongo_client(database_name, collection_name):
     db_result = db[collection_name]
     return db_result
 
-def mongo_dbs():
+def list_db():
     db_list = MONGO_CLIENT.list_database_names()
     return db_list
 
-def mongo_collections(db:str):
+def list_collections(db:str):
     _db = MONGO_CLIENT[db]
     return _db.list_collection_names()
 
-def mongo_summarize(db:str,collection:str):
+def get_summarize(db:str,collection:str):
     connection = get_mongo_client(db,collection)
     out_dict = {}
     out_dict['DatabaseName'] = db
@@ -26,7 +26,7 @@ def mongo_summarize(db:str,collection:str):
     out_dict['TotalRecords'] = connection.count_documents({})
     return out_dict
 
-def mongo_sample(db:str,collection:str,query_by:str,value:str,limit:int=1):
+def get_sample(db:str,collection:str,query_by:str,value:str,limit:int=1):
     connection = get_mongo_client(db,collection)
     if str(query_by).lower().__contains__('id'):
         record = [i for i in connection.find({query_by:int(value)},{'_id':0},limit=limit)]
@@ -34,7 +34,7 @@ def mongo_sample(db:str,collection:str,query_by:str,value:str,limit:int=1):
         record = [i for i in connection.find({query_by: value}, {'_id': 0}, limit=limit)]
     return record
 
-def mongo_update_record(connection:dict,query_by:str,query_by_value,data:dict):
+def update_record(connection:dict,query_by:str,query_by_value,data:dict):
     assert ('db' and 'collection' in list(connection.keys())), 'Required attributes not found!'
     try:
         connection = get_mongo_client(connection['db'], connection['collection'])
@@ -44,7 +44,21 @@ def mongo_update_record(connection:dict,query_by:str,query_by_value,data:dict):
         else : return False
     except Exception as error: raise Exception(error)
 
-def mongo_create_index(connection:dict,index_attributes:list,ascending:bool=True):
+def update_attribute(connection:dict,query_by:str,query_by_value,data:dict,attributes:list):
+    '''useful in updating specific attribute. for example adding location in same document in location attribute'''
+    connection = get_mongo_client(connection['db'], connection['collection'])
+    exist_check = connection.find_one({query_by: query_by_value})
+    if exist_check:
+        _id = exist_check['_id']
+        for update_key in attributes:
+            old_value = exist_check.get(update_key,[])
+            current_value = data.get(update_key,[])
+            if type(old_value) == list and type(current_value) == list:
+                new_without_Dup = set(old_value + current_value)
+                connection.update_one({'_id': _id}, {'$set': {update_key: list(new_without_Dup)}})
+    else: connection.insert_one(data)
+
+def create_index(connection:dict,index_attributes:list,ascending:bool=True):
     assert ('db' and 'collection' in list(connection.keys())),'Required attributes not found!'
     try:
         connection = get_mongo_client(connection['db'],connection['collection'])
