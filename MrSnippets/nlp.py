@@ -3,7 +3,13 @@ import bleach
 import re
 from collections import Counter
 from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk.tokenize import RegexpTokenizer
 from MrSnippets.helpers import *
+try:
+    stop_words = set(stopwords.words('english'))
+except: raise FileNotFoundError("Stopwords not Found! use \n import nltk\nnltk.download('stopwords')\n in the python console")
 
 # Use Python console to download stopwords
 # import nltk
@@ -49,3 +55,28 @@ def get_word_frequency(html_source, search_words):
                     counter += word_source[0].count(keyword.lower().strip())
             word_frequency[labels] = str(counter)
     return word_frequency
+
+def get_tokenized(string:str,ignore_stopwords:bool=False):
+    word_tokens = word_tokenize(string)
+    if ignore_stopwords:
+        filtered_sentence = [w for w in word_tokens if not w in stop_words]
+        return filtered_sentence
+    else: return word_tokens
+
+def get_lemmatize_data(tokens:list):
+    lem = WordNetLemmatizer()
+    return [lem.lemmatize(w) for w in tokens]
+
+def get_standardize_words(tokens:list,lookup_dict:dict):
+    new_words = []
+    for word in tokens:
+        if word.lower() in lookup_dict:
+            word = lookup_dict[word.lower()]
+        new_words.append(word)
+    return new_words
+
+def generate_ngrams(tokens:list,n):
+    output = []
+    for i in range(len(tokens)-n+1):
+        output.append(tokens[i:i+n])
+    return output

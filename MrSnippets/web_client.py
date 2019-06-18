@@ -56,7 +56,8 @@ def get_proxy():
 
 def get_response(url, response_type, attempt=0, **kwargs):
     RESPONSE_DATA = None
-    payload = kwargs.get('payload', 60)
+    data = kwargs.get('data', {})
+    params = kwargs.get('params', {})
     timeout = kwargs.get('time_out', 60)
     verify = kwargs.get('verify', True)
     method = kwargs.get('method', None)
@@ -82,11 +83,11 @@ def get_response(url, response_type, attempt=0, **kwargs):
 
     try:
         if str(method).upper() == 'POST':
-            response = requests.post(url, data = payload, headers=headers, proxies = proxy, timeout=timeout, verify=verify)
+            response = requests.post(url, data = data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify)
             response_status = response.status_code
             URLMETA.update({'log_type':'Request','response_code': str(response_status), 'retry': attempt})
         else:
-            response = requests.get(url, data = payload, headers=headers, proxies = proxy, timeout=timeout, verify=verify, allow_redirects=allow_redirects, stream=stream)
+            response = requests.get(url, data=data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify, allow_redirects=allow_redirects, stream=stream)
             response_status = response.status_code
             URLMETA.update({'log_type': 'Request','response_code': str(response_status), 'retry': attempt})
     except Exception as error:
