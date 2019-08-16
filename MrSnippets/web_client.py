@@ -9,6 +9,7 @@ import json
 from bs4 import BeautifulSoup
 from MrSnippets.misc import *
 from itertools import cycle
+from selenium import webdriver
 
 
 def UPDATE_FETCHER_LOG(logDict):
@@ -56,7 +57,9 @@ def get_proxy():
 
 def get_response(url, response_type, attempt=0, **kwargs):
     RESPONSE_DATA = None
+    response = None
     data = kwargs.get('data', {})
+    gateway = kwargs.get('gateway', 'requests')
     params = kwargs.get('params', {})
     timeout = kwargs.get('time_out', 60)
     verify = kwargs.get('verify', True)
@@ -80,16 +83,24 @@ def get_response(url, response_type, attempt=0, **kwargs):
 
     REQUEST_META_LOG = {"ResponseType":response_type,'RequestData':json.dumps(kwargs)}
     URLMETA.update({"RequestMeta":REQUEST_META_LOG})
-
     try:
-        if str(method).upper() == 'POST':
-            response = requests.post(url, data = data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify)
-            response_status = response.status_code
-            URLMETA.update({'log_type':'Request','response_code': str(response_status), 'retry': attempt})
-        else:
-            response = requests.get(url, data=data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify, allow_redirects=allow_redirects, stream=stream)
-            response_status = response.status_code
-            URLMETA.update({'log_type': 'Request','response_code': str(response_status), 'retry': attempt})
+        if gateway == 'selenium':
+            try:
+                driver = webdriver.Chrome()
+                driver.get(url)
+                response = driver.page_source
+            except Exception as error:
+                response = None
+                URLMETA.update({'log_type': 'Error', 'response_code': 'NA', 'retry': attempt, 'Error': str(error)})
+        elif gateway == "requests":
+            if str(method).upper() == 'POST':
+                response = requests.post(url, data = data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify)
+                response_status = response.status_code
+                URLMETA.update({'log_type':'Request','response_code': str(response_status), 'retry': attempt})
+            else:
+                response = requests.get(url, data=data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify, allow_redirects=allow_redirects, stream=stream)
+                response_status = response.status_code
+                URLMETA.update({'log_type': 'Request','response_code': str(response_status), 'retry': attempt})
     except Exception as error:
         response = None
         if 'Caused by ProxyError' in str(error):
