@@ -1,5 +1,5 @@
 # Contributing
-All contributions, bug reports, bug fixes, documentation improvements, enhancements, and ideas are welcome.
+All contributions are welcome like bugs fixing, new code addition, improving the documentation
 
 Please follow these steps:
 
@@ -11,5 +11,5 @@ Please follow these steps:
 * Modify the tests and documentation as necessary
 * When your changes are ready, make a pull request to the upstream [MrSnippets](https://github.com/dhamodharanrk/MrSnippets) repository
 
-If you have any questions, please email me at
+For any queries and questions, Please reach out to
 [dhamodharanrk@gmail.com](mailto:dhamodharanrk@gmail.com).

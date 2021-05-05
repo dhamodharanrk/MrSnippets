@@ -5,12 +5,16 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 NAME = "MrSnippets"
-DESCRIPTION = "A complete collection of common code snippets"
+DESCRIPTION = "A complete collection of commonly used code Snippets in Python"
 URL = "https://github.com/dhamodharanrk/MrSnippets"
 EMAIL = "dhamodharanrk@gmail.com"
 AUTHOR = "Dhamodharan Karuppuswamy"
 
-REQUIRED = ["beautifulsoup4>=4.3.3","PyMySQL>=0.9.3","pymongo>=3.8.0","user_agent>=0.1.9","ftfy>=5.5.1","tldextract>=2.2.1","bleach>=3.1.0","requests>=2.18.4","html5lib>=1.0b10","pytest-shutil>=1.6.0","Pillow>=2.2.1","fuzzywuzzy>=0.17.0"]
+REQUIRED = ["beautifulsoup4>=4.3.3","requests>=2.18.4","html5lib>=1.0b10","user_agent>=0.1.9","selenium>= 3.141.0","PyMySQL>=0.9.3","pymongo>=3.8.0",
+            "ftfy>=5.5.1","tldextract>=2.2.1","bleach>=3.1.0","python-csv>=0.0.11","nltk>=3.4.5","spacy>=2.3.2","sklearn>=0.0",
+            "pytest-shutil>=1.6.0","Pillow>=2.2.1","pyodbc>=4.0.26","fuzzywuzzy>=0.18.0","pycountry>=19.8","geopy>=1.21","python-dateutil>=2.8.1",
+            "urllib3>=1.25","tldextract>=2.2.2","geotext>=0.4.0","dateparser>=1.0.0","uuid>=1.30","glob2>=0.7"
+            ]
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -65,6 +69,8 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8"
     ],
     cmdclass={"upload": UploadCommand},
 )
