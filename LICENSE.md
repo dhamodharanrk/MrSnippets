@@ -1,6 +1,6 @@
 BSD 2-Clause License
 
-Copyright (c) 2019, Dhamodharan Karuppuswamy
+Copyright (c) 2021, Dhamodharan Karuppuswamy
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

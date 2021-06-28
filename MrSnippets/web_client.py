@@ -1,68 +1,110 @@
 __author__ = 'dhamodharan.k'
-from user_agent import generate_user_agent
-import tldextract
-import os
 import requests
-from datetime import datetime
-import hashlib
 import json
+from MrSnippets.data_mining import extract_domain_name_from_url
+from MrSnippets.utilities import *
 from bs4 import BeautifulSoup
-from MrSnippets.misc import *
 from itertools import cycle
-
+from selenium import webdriver
 
 def UPDATE_FETCHER_LOG(logDict):
-    # Idea behind is to store on DB. Currently structured for mongo
+    """
+    the idea behind this is to store the logs in database.
+    :param logDict: dict data
+    :return: None
+    """
     write_text_file('','request.log',str(logDict))
-
-def get_user_agent(**kwargs):
-    domain_specific = {}
-    user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36'
-    try:
-        domain_name = kwargs.get('domain_name','NA')
-        user_agent = domain_specific.get(domain_name) if domain_name in domain_specific.keys() else generate_user_agent(device_type='desktop',os=['win','linux','mac'])
-    except: pass
-    return user_agent
-
-def extract_domain_name(url):
-    if "http" in str(url) or "www" in str(url):
-        parsed = tldextract.extract(url)
-        parsed = ".".join([i for i in parsed if i])
-        return parsed
-    else: return "NA"
-
-def downloader(url,dir,file_name,extension):
-    if not os.path.exists(dir): os.makedirs(dir)
-    try:
-        response_obj = get_response(url,'response', proxy=True, stream=True)
-        if response_obj:
-            with open(dir + file_name + "." + extension, 'wb') as f:
-                for chunk in response_obj.iter_content(1024):
-                    f.write(chunk)
-            return True
-    except Exception as ValueError:
-        print(ValueError)
-
-# Its a sample implementation, In real life scanario it won't work as expected since this module initialized each time while calling it.
-# To overcome and keep all track of proxies, i choose my own algorithm
-# Using random function is better option but it won't help in-terms of sequence hits
 
 proxy_sets = {"xx.xx.xx.xxx:80", "xx.xx.xx.xxx:90"}
 proxy_pool = cycle(proxy_sets)
 def get_proxy():
+    """
+    :return: proxy dict
+    """
     proxy = next(proxy_pool)
     return {"http": proxy, "https": proxy}
-#End
+
+def get_selenium_response(url, timeout):
+    """
+    A method to get the selenium based response for the given URL
+    :param url:  Input URL
+    :param timeout: Max wait time for the request
+    :return: BeautifulSoup object
+    """
+    browser = None
+    if get_current_platform() == "windows":
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('-headless')
+        browser = webdriver.Chrome("chromedriver.exe", chrome_options=chrome_options)
+    # else:
+        # os.environ["PATH"] += os.pathsep + BaseDir.fireFoxPath
+        # options = webdriver.FirefoxOptions()
+        # options.add_argument('-headless')
+        # browser = webdriver.Firefox(executable_path=BaseDir.geckodriverPath, firefox_options=options,timeout=timeout)
+    browser.get(url)
+    html = browser.page_source
+    soup = BeautifulSoup(html, "html.parser")
+    browser.close()
+    browser.quit()
+    return soup
 
 def get_response(url, response_type, attempt=0, **kwargs):
+
+    """
+    A method used to get the web response and returns in user defined format.
+
+    :param url: URL to get web response
+
+    :param response_type: One of Pre-defined method to return the fetched response
+
+        soup : Returns the web response as BeautifulSoup object
+
+        text : Returns the web response as raw text
+
+        json : returns the response as json object
+
+        content : returns the web response as it is. Use full in fetching file objects
+
+        response : returns the response code
+
+    :param attempt: holds the number of retry should be performed
+
+    :param kwargs: Holds multiple options to utilize the same method in multiple ways.
+
+        data : Used in post method to provide data
+
+        params : Used to pass parameters data for post method
+
+        time_out : Used to set the timeout for the requests and its an integer
+
+        verify : Verify the HTTP Certificate. Will be Bool value. By default True
+
+        method : pre-defined value either POST or GET
+
+        headers : dict data holds the HTTP headers. By default holds the User-Agent String
+
+        allow_redirects : Bool value
+
+        stream : Bool value
+
+        request_type : Pre-defined value. Either requests or selenium
+
+        dom_parser : method to parse HTML in BeautifulSoup. By default html5lib
+
+    :return: returns as per response_type args
+
+
+    """
     RESPONSE_DATA = None
+    response = None
     data = kwargs.get('data', {})
+    gateway = kwargs.get('gateway', 'requests')
     params = kwargs.get('params', {})
     timeout = kwargs.get('time_out', 60)
     verify = kwargs.get('verify', True)
     method = kwargs.get('method', None)
     domain = kwargs.get('domain', '')
-    if not domain : domain = tldextract.extract(url).domain
+    if not domain : domain = extract_domain_name_from_url(url)
     headers = kwargs.get('headers',{})
     allow_redirects = kwargs.get('allow_redirects', True)
     proxy =  kwargs.get('proxy', True)
@@ -80,16 +122,22 @@ def get_response(url, response_type, attempt=0, **kwargs):
 
     REQUEST_META_LOG = {"ResponseType":response_type,'RequestData':json.dumps(kwargs)}
     URLMETA.update({"RequestMeta":REQUEST_META_LOG})
-
     try:
-        if str(method).upper() == 'POST':
-            response = requests.post(url, data = data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify)
-            response_status = response.status_code
-            URLMETA.update({'log_type':'Request','response_code': str(response_status), 'retry': attempt})
-        else:
-            response = requests.get(url, data=data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify, allow_redirects=allow_redirects, stream=stream)
-            response_status = response.status_code
-            URLMETA.update({'log_type': 'Request','response_code': str(response_status), 'retry': attempt})
+        if gateway == 'selenium':
+            try:
+                response = get_selenium_response(url, timeout)
+            except Exception as error:
+                response = None
+                URLMETA.update({'log_type': 'Error', 'response_code': 'NA', 'retry': attempt, 'Error': str(error)})
+        elif gateway == "requests":
+            if str(method).upper() == 'POST':
+                response = requests.post(url, data = data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify)
+                response_status = response.status_code
+                URLMETA.update({'log_type':'Request','response_code': str(response_status), 'retry': attempt})
+            else:
+                response = requests.get(url, data=data, params=params, headers=headers, proxies = proxy, timeout=timeout, verify=verify, allow_redirects=allow_redirects, stream=stream)
+                response_status = response.status_code
+                URLMETA.update({'log_type': 'Request','response_code': str(response_status), 'retry': attempt})
     except Exception as error:
         response = None
         if 'Caused by ProxyError' in str(error):
@@ -99,13 +147,17 @@ def get_response(url, response_type, attempt=0, **kwargs):
             print('Error occurred while fetching page response. Error Message -- ' + str(error) + str(url))
     if response:
         try:
-            if response.status_code == 200:
+            if response.status_code == 200 and gateway != "selenium":
                 page_response = response
                 if response_type == 'soup': RESPONSE_DATA = BeautifulSoup(page_response.text, dom_parser)
                 elif response_type == 'text': RESPONSE_DATA = page_response.text
                 elif response_type == 'content': RESPONSE_DATA = response.content
                 elif response_type == 'json': RESPONSE_DATA = response.json()
                 elif response_type == 'response': RESPONSE_DATA = response
+            if response.status_code == 429 or response.status_code == 401 and gateway != "selenium":
+                get_response(url, response_type, attempt + 1, **kwargs)
+            elif gateway == "selenium":
+                RESPONSE_DATA = response
             else:
                 response_status = response.status_code
                 URLMETA.update({'log_type': 'Error','response_code': str(response_status), 'retry': attempt})
@@ -117,3 +169,27 @@ def get_response(url, response_type, attempt=0, **kwargs):
             get_response(url, response_type, attempt + 1, **kwargs)
     UPDATE_FETCHER_LOG(URLMETA)
     return RESPONSE_DATA
+
+
+def download_file(url,dir,file_name,extension):
+    """
+
+    :param url: download link
+    :param dir: directory to store the file
+    :param file_name: file name for the download, Optional None
+    :param extension: file extension without dot
+    :return: None
+    """
+
+    if not os.path.exists(dir): os.makedirs(dir)
+    try:
+        response_obj = get_response(url,'response', proxy=True, stream=True)
+        if response_obj:
+            if not file_name:
+                file_name = genearate_hash_key(str(url))
+            with open(dir + file_name + "." + extension, 'wb') as f:
+                for chunk in response_obj.iter_content(1024):
+                    f.write(chunk)
+            return True
+    except Exception as ValueError:
+        print(ValueError)

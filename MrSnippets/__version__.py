@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
 __title__ = "MrSnippets"
-__description__ = "A complete collection of common code snippets"
+__description__ = "A complete collection of commonly used code Snippets in Python"
 __author__ = "Dhamodharan Karuppuswamy"
-__version__ = "1.1.1"
+__version__ = "2.0.1"

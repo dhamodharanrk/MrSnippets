@@ -5,12 +5,25 @@ import warnings
 
 
 def get_sql_client(server_ip,database,userName,pwd):
-    '''db_object = get_sql_client('195.16.40.82', 'SampleDB', 'root', 'password')'''
+    """
+    :param server_ip: 195.16.40.82
+    :param database: SampleDB
+    :param userName: root
+    :param pwd: root
+    :return: connection object
+    """
     cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server_ip+';DATABASE='+database+';UID='+userName+';PWD='+pwd)
     cursor = cnxn.cursor()
     return cursor
 
 def query_actions(db_object, query, query_type):
+    """
+
+    :param db_object: connection object
+    :param query: query
+    :param query_type: query type. either update/insert/select
+    :return: query result
+    """
     query = query.replace("'NULL'",'NULL')
     if query_type == 'insert' or query_type == 'update':
         db_object.execute(query)
@@ -21,6 +34,13 @@ def query_actions(db_object, query, query_type):
         return rows
 
 def insert_records(connection_obj, table_data:dict, data_dict: dict, unique_columns:list):
+    """
+    :param connection_obj: connection object
+    :param table_data: {"db_name":"sampleDb","table_name":"stu"}
+    :param data_dict: update/insert data as key value pair
+    :param unique_columns: unique only columns as list
+    :return: scope_id
+    """
     db = table_data.get('db_name')
     table_name = table_data.get('table_name')
     query = "select column_name FROM "+str(db)+".INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'" + table_name + "'"
@@ -45,5 +65,3 @@ def insert_records(connection_obj, table_data:dict, data_dict: dict, unique_colu
         warnings.warn('Data already Exist in given table')
         scope_id = data_exists[0][0]
     return scope_id
-
-
