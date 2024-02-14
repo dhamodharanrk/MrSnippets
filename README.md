@@ -1,3 +1,5 @@
+[![Downloads](https://static.pepy.tech/badge/MrSnippets)](https://pepy.tech/project/MrSnippets)
+
 # MrSnippets
 
 A complete collection of commonly used code Snippets in Python
