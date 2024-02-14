@@ -1,4 +1,4 @@
-[![Downloads](https://static.pepy.tech/badge/MrSnippets)](https://pepy.tech/project/MrSnippets)
+[![Downloads](https://static.pepy.tech/badge/MrSnippets)](https://pepy.tech/project/MrSnippets) | [![Downloads](https://static.pepy.tech/badge/MrSnippets/month)](https://pepy.tech/project/MrSnippets) | [![Downloads](https://static.pepy.tech/badge/MrSnippets/week)](https://pepy.tech/project/MrSnippets)
 
 # MrSnippets
 
